@@ -53,7 +53,7 @@ public:
 			ilosc = 0;
 		}
 	}
-	int rozmiar() {
+	int rozmiar() const {
 		return ilosc;
 	}
 	void wstaw(int pozycja, T wartosc) { //w dowolne miejsce a nie na koniec dla zachowania kolejności alfabetycznej
@@ -71,6 +71,22 @@ public:
 
 		dane[pozycja] == wartosc;
 		ilosc++;
+	}
+	void wstaw_na_koniec(T wartosc) {
+		if (ilosc < pojemnosc) {
+			dane[ilosc] = wartosc;
+			ilosc++;
+		}
+		else {
+			if (rozmiar() == 0) {
+				zmien_rozmiar(2);
+			}
+			else {
+				zmien_rozmiar(rozmiar() * 2);
+			}
+			dane[ilosc] = wartosc;
+			ilosc++;
+		}
 	}
 	void wyswietl() {
 		for (int i = 0; i < rozmiar(); i++) {
@@ -136,7 +152,44 @@ public:
 
 class drzewo
 {
-	
+public:
+	void dodaj_tlumaczenie(vector<char>& slowo, vector<char>& tlumaczenie) {
+		wezel* w = &root;
+		wezel* temp;
+		int dlugosc_slowa = slowo.rozmiar();
+		for (int i = 0; i < dlugosc_slowa; i++) {
+			temp = w->pobierz_dziecko(slowo[i]);
+			if (temp != nullptr) {
+				w = temp;
+			}
+			else {
+				w = w->dodaj_dziecko(slowo[i]);
+			}
+		}
+		w->tlumaczenie.czysc_tablice();
+		for (int i = 0; i < tlumaczenie.rozmiar(); i++) {
+			w->tlumaczenie[i] = tlumaczenie[i];
+		}
+	}
+	vector<char> pobierz_tlumaczenie(vector<char>& slowo) {
+		wezel* w = &root;
+		int dlugosc_slowa = slowo.rozmiar();
+		for (int i = 0; i < dlugosc_slowa; i++) {
+			w = w->pobierz_dziecko(slowo[i]);
+			if (w == nullptr) {
+				return vector<char>("-");
+			}
+		}
+		//skonczyl na w->litera;
+		if (w->tlumaczenie.czy_pusta()) {
+			return vector<char>("-");
+		}
+		else {
+			return w->tlumaczenie;
+		}
+	}
+private:	
+	wezel root;
 };
 
 
