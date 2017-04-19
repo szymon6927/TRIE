@@ -153,6 +153,7 @@ public:
 class drzewo
 {
 public:
+	~drzewo() { czysc_drzewo(); }
 	void dodaj_tlumaczenie(vector<char>& slowo, vector<char>& tlumaczenie) {
 		wezel* w = &root;
 		wezel* temp;
@@ -187,6 +188,39 @@ public:
 		else {
 			return w->tlumaczenie;
 		}
+	}
+	void wyswietl_z_prefixem(vector<char>& prefix) {
+		wezel* w = &root;
+		int wielkosc_prefixu = prefix.rozmiar();
+		for (int i; i < wielkosc_prefixu; i++) {
+			w = w->pobierz_dziecko(prefix[i]);
+			if (w == nullptr) {
+				cout << "-n\n";
+				return;
+			}
+		}
+		bool znajdz = false;
+		dzieci_od_prefixu(w, znajdz);
+		if (znajdz == false) {
+			cout << "-\n";
+		}
+	}
+	void dzieci_od_prefixu(wezel *w, bool& znajdz) {
+		if (!w->tlumaczenie.czy_pusta())
+		{
+			znajdz = true;
+			w->tlumaczenie.wyswietl();
+			cout << "\n";
+		}
+
+		int ilosc_dzeci = w->dziecko.rozmiar();
+
+		for (int i = 0; i < ilosc_dzeci; i++) {
+			dzieci_od_prefixu(w->dziecko[i], znajdz);
+		}
+	}
+	void czysc_drzewo() {
+		root.czysc_wezel;
 	}
 private:	
 	wezel root;
