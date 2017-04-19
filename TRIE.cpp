@@ -5,13 +5,13 @@
 
 using namespace std;
 
-const int max_dlugosc = 16 + 1; //+1 dla znaku konca ci¹gu eg. \0
+const int max_dlugosc = 16 + 1; //+1 dla znaku konca ciÄ…gu eg. \0
 
 class vector
 {
 public:
 	vector(): dane(nullptr), ilosc(0), pojemnosc(0) {}
-	vector(char slowo[]) : dane(nullptr) { //konstruktor incjujacy moje s³owo
+	vector(char slowo[]) : dane(nullptr) { //konstruktor incjujacy moje sÅ‚owo
 		zmien_rozmiar(max_dlugosc); //tworzymy z banki tablice 16 plus jeden zeby wiadomo gdzie koniec
 		for (int i; i <= max_dlugosc; i++) {
 			if (slowo[i] == '\0') {
@@ -22,6 +22,14 @@ public:
 				dane[i] = slowo[i];
 			}
 		}
+	}
+	vector(vector &kopia) {
+		dane = new int[kopia.rozmiar()];
+		pojemnosc = kopia.rozmiar();
+		for (int i = 0; i < kopia.rozmiar(); i++) {
+			dane[i] = kopia[i];
+		}
+		ilosc = kopia.rozmiar();
 	}
 	~vector() { czysc_tablice(); } //likwidacja talicy
 	void zmien_rozmiar(int nowy_rozmiar) {
@@ -48,7 +56,7 @@ public:
 	int rozmiar() {
 		return ilosc;
 	}
-	void wstaw(int pozycja, int wartosc) { //w dowolne miejsce a nie na koniec dla zachowania kolejnoœci alfabetycznej
+	void wstaw(int pozycja, int wartosc) { //w dowolne miejsce a nie na koniec dla zachowania kolejnoÅ›ci alfabetycznej
 		if (ilosc == pojemnosc) {
 			if (rozmiar() == 0) {
 				zmien_rozmiar(2);
@@ -70,14 +78,14 @@ public:
 		}
 		ilosc++;
 	}
-	bool czy_pusta() {
-		if (ilosc == 0) {
-			return true;
-		}
-	}
 	void wyswietl() {
 		for (int i = 0; i < rozmiar(); i++) {
 			cout << dane[i];
+		}
+	}
+	bool czy_pusta() {
+		if (ilosc == 0) {
+			return true;
 		}
 	}
 
