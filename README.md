@@ -1,0 +1,2 @@
+# TRIE
+drzewo słownikowe
