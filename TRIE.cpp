@@ -1,5 +1,5 @@
 // TRIE.cpp : Defines the entry point for the console application.
-
+//
 #include <iostream>
 
 using namespace std;
@@ -184,12 +184,12 @@ public:
 		for (int i = 0; i < dlugosc_slowa; i++) {
 			w = w->pobierz_dziecko(slowo[i]);
 			if (w == nullptr) {
-				return vector<char>("-\n");
+				return vector<char>("-");
 			}
 		}
 		//skonczyl na w->litera;
 		if (w->tlumaczenie.czy_pusta()) {
-			return vector<char>("-\n");
+			return vector<char>("-");
 		}
 		else {
 			return w->tlumaczenie;
@@ -201,7 +201,7 @@ public:
 		for (int i = 0; i < wielkosc_prefixu; i++) {
 			w = w->pobierz_dziecko(prefix[i]);
 			if (w == nullptr) {
-				cout << "-n\n";
+				cout << "-\n";
 				return;
 			}
 		}
@@ -255,6 +255,7 @@ int main()
 		}
 		else if (znak == '?') {
 			TRIE.pobierz_tlumaczenie(slowo).wyswietl();
+			cout << "\n";
 		}
 		else {
 			TRIE.wyswietl_z_prefixem(slowo);
