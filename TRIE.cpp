@@ -1,5 +1,10 @@
 // TRIE.cpp : Defines the entry point for the console application.
 //
+
+//count - ilosc
+// alocated - pojemnosc
+
+#include "stdafx.h"
 #include <iostream>
 
 using namespace std;
@@ -69,7 +74,7 @@ public:
 			dane[i] = dane[i - 1]; //do danych i przypisujemy dane wartosci z poprzednich komorek, przesuwajac w prawo
 		}
 
-		dane[pozycja] == wartosc;
+		dane[pozycja] = wartosc;
 		ilosc++;
 	}
 	void wstaw_na_koniec(T wartosc) {
@@ -154,45 +159,47 @@ class drzewo
 {
 public:
 	~drzewo() { czysc_drzewo(); }
-	void dodaj_tlumaczenie(vector<char>& slowo, vector<char>& tlumaczenie) {
+	void dodaj_tlumaczenie(vector<char>&& slowo, vector<char>&& tlumaczenie) {
 		wezel* w = &root;
 		wezel* temp;
+
 		int dlugosc_slowa = slowo.rozmiar();
 		for (int i = 0; i < dlugosc_slowa; i++) {
 			temp = w->pobierz_dziecko(slowo[i]);
-			if (temp != nullptr) {
-				w = temp;
+			if (temp == nullptr) {
+				w = w->dodaj_dziecko(slowo[i]);
 			}
 			else {
-				w = w->dodaj_dziecko(slowo[i]);
+				w = temp;
 			}
 		}
 		w->tlumaczenie.czysc_tablice();
+		w->tlumaczenie.zmien_rozmiar(tlumaczenie.rozmiar());
 		for (int i = 0; i < tlumaczenie.rozmiar(); i++) {
-			w->tlumaczenie[i] = tlumaczenie[i];
+			w->tlumaczenie.wstaw_na_koniec(tlumaczenie[i]);
 		}
 	}
-	vector<char> pobierz_tlumaczenie(vector<char>& slowo) {
+	vector<char> pobierz_tlumaczenie(vector<char>&& slowo) {
 		wezel* w = &root;
 		int dlugosc_slowa = slowo.rozmiar();
 		for (int i = 0; i < dlugosc_slowa; i++) {
 			w = w->pobierz_dziecko(slowo[i]);
 			if (w == nullptr) {
-				return vector<char>("-");
+				return vector<char>("-\n");
 			}
 		}
 		//skonczyl na w->litera;
 		if (w->tlumaczenie.czy_pusta()) {
-			return vector<char>("-");
+			return vector<char>("-\n");
 		}
 		else {
 			return w->tlumaczenie;
 		}
 	}
-	void wyswietl_z_prefixem(vector<char>& prefix) {
+	void wyswietl_z_prefixem(vector<char>&& prefix) {
 		wezel* w = &root;
 		int wielkosc_prefixu = prefix.rozmiar();
-		for (int i; i < wielkosc_prefixu; i++) {
+		for (int i = 0; i < wielkosc_prefixu; i++) {
 			w = w->pobierz_dziecko(prefix[i]);
 			if (w == nullptr) {
 				cout << "-n\n";
@@ -220,7 +227,7 @@ public:
 		}
 	}
 	void czysc_drzewo() {
-		root.czysc_wezel;
+		root.czysc_wezel();
 	}
 private:	
 	wezel root;
@@ -229,6 +236,32 @@ private:
 
 int main()
 {
+
+	drzewo TRIE;
+
+	char znak;
+	char slowo[17];
+
+	while (cin >> znak) {
+
+		cin >> ws;
+		cin >> slowo;
+
+		if (znak == '+') {
+			char tlumaczenie[max_dlugosc];
+			cin >> ws;
+			cin >> tlumaczenie;
+			TRIE.dodaj_tlumaczenie(slowo, tlumaczenie);
+
+		}
+		else if (znak == '?') {
+			TRIE.pobierz_tlumaczenie(slowo).wyswietl();
+		}
+		else { 
+			TRIE.wyswietl_z_prefixem(slowo);
+		}
+
+	}
+
 	return 0;
 }
-
