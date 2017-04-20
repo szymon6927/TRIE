@@ -1,10 +1,5 @@
 // TRIE.cpp : Defines the entry point for the console application.
-//
 
-//count - ilosc
-// alocated - pojemnosc
-
-#include "stdafx.h"
 #include <iostream>
 
 using namespace std;
@@ -15,8 +10,8 @@ template <class T>
 class vector
 {
 public:
-	vector(): dane(nullptr), ilosc(0), pojemnosc(0) {}
-	vector(char slowo[]) : dane(nullptr) { //konstruktor incjujacy moje słowo
+	vector() : dane(nullptr), ilosc(0), pojemnosc(0) {}
+	vector(const char slowo[]) : dane(nullptr) { //konstruktor incjujacy moje słowo
 		zmien_rozmiar(max_dlugosc); //tworzymy z banki tablice 16 plus jeden zeby wiadomo gdzie koniec
 		for (int i = 0; i < max_dlugosc; i++) {
 			if (slowo[i] == '\0') {
@@ -28,7 +23,7 @@ public:
 			}
 		}
 	}
-	vector(vector<T> &kopia) {
+	vector(const vector<T> &kopia) {
 		dane = new T[kopia.rozmiar()];
 		pojemnosc = kopia.rozmiar();
 		for (int i = 0; i < kopia.rozmiar(); i++) {
@@ -45,10 +40,10 @@ public:
 			}
 			delete[] dane;
 		}
-		else {
-			dane = nowa_tablica;
-			pojemnosc = nowy_rozmiar;
-		}
+		
+		dane = nowa_tablica;
+		pojemnosc = nowy_rozmiar;
+		
 	}
 	void czysc_tablice() {
 		if (dane != nullptr) {
@@ -107,13 +102,17 @@ public:
 		return dane[index];
 	}
 
+	const T& operator[](int index) const {
+		return dane[index];
+	}
+
 private:
 	T *dane;
 	int ilosc;
 	int pojemnosc;
 };
 
-class wezel 
+class wezel
 {
 public:
 	wezel() : litera('\0') {}
@@ -159,7 +158,7 @@ class drzewo
 {
 public:
 	~drzewo() { czysc_drzewo(); }
-	void dodaj_tlumaczenie(vector<char>&& slowo, vector<char>&& tlumaczenie) {
+	void dodaj_tlumaczenie(const vector<char>& slowo,const vector<char>& tlumaczenie) {
 		wezel* w = &root;
 		wezel* temp;
 
@@ -179,7 +178,7 @@ public:
 			w->tlumaczenie.wstaw_na_koniec(tlumaczenie[i]);
 		}
 	}
-	vector<char> pobierz_tlumaczenie(vector<char>&& slowo) {
+	vector<char> pobierz_tlumaczenie(const vector<char>& slowo) {
 		wezel* w = &root;
 		int dlugosc_slowa = slowo.rozmiar();
 		for (int i = 0; i < dlugosc_slowa; i++) {
@@ -196,7 +195,7 @@ public:
 			return w->tlumaczenie;
 		}
 	}
-	void wyswietl_z_prefixem(vector<char>&& prefix) {
+	void wyswietl_z_prefixem(const vector<char>& prefix) {
 		wezel* w = &root;
 		int wielkosc_prefixu = prefix.rozmiar();
 		for (int i = 0; i < wielkosc_prefixu; i++) {
@@ -229,7 +228,7 @@ public:
 	void czysc_drzewo() {
 		root.czysc_wezel();
 	}
-private:	
+private:
 	wezel root;
 };
 
@@ -257,7 +256,7 @@ int main()
 		else if (znak == '?') {
 			TRIE.pobierz_tlumaczenie(slowo).wyswietl();
 		}
-		else { 
+		else {
 			TRIE.wyswietl_z_prefixem(slowo);
 		}
 
